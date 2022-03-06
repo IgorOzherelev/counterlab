@@ -9,7 +9,7 @@ public class MutexCounter implements Counter {
     }
 
     @Override
-    public long getValue() {
+    public synchronized long getValue() {
         return count;
     }
 }

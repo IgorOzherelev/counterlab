@@ -8,14 +8,12 @@ public class ConcurrentCounter implements Counter {
 
     @Override
     public void increment() {
-        try {
-            semaphore.acquire();
-            counter++;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            semaphore.release();
+        boolean acquired = false;
+        while (!acquired) {
+            acquired = semaphore.tryAcquire();
         }
+        counter++;
+        semaphore.release();
     }
 
     @Override
