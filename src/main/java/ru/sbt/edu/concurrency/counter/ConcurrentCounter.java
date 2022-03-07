@@ -4,15 +4,16 @@ import java.util.concurrent.Semaphore;
 
 public class ConcurrentCounter implements Counter {
     private long counter = 0;
-    private final Semaphore semaphore = new Semaphore(1);
+    private final Semaphore semaphore = new Semaphore(1, true);
 
     @Override
     public void increment() {
-        boolean acquired = false;
-        while (!acquired) {
-            acquired = semaphore.tryAcquire();
+        try {
+            semaphore.acquire();
+            counter++;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        counter++;
         semaphore.release();
     }
 
